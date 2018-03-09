@@ -17,5 +17,6 @@ public class MainActivity extends AppCompatActivity {
         autoProgressView.setRateBackgroundColor("#e4f6eb");
         autoProgressView.setOrientation(LinearLayout.HORIZONTAL);
         autoProgressView.setAnimRate((int) (0.75 * 30));
+
     }
 }
