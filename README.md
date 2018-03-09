@@ -1,6 +1,9 @@
 # AutoProgressView
 
 Introduce
+
+      This is an auto progress view that you can set kinds of attributes of it.
+      For example, the oritation or background color of the progressView and so on.
       
 Installation
 
