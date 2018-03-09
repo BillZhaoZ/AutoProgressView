@@ -14,7 +14,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 /**
- * 自动加载进度
+ * 自动加载的柱状进度条
+ * 特性：支持横向和竖向加载，并可以自定义设置进度条背景颜色和背景图片，加载速度动画和控件的宽高。
  */
 public class AutoProgressView extends View implements Runnable {
 
@@ -24,17 +25,20 @@ public class AutoProgressView extends View implements Runnable {
     private int comHeight;//控件高度
 
     private View rateView;//进度条
+    private int rateHeight; //进度条的高
+    private int rateWidth; //进度条的宽
     private View rateTopView; //进度条顶部View
+
     private String rateBackgroundColor;//进图条背景颜色
     private int rateBackgroundId; //进图条背景图片id
     private Bitmap rataBackgroundBitmap;
     private boolean isHasRateTopView; //进度条顶部View
-    private int rateHeight; //进度条的高
-    private int rateWidth; //进度条的宽
+
     private int rateAnimValue;//进度条动画高度
     private int orientation; //设置柱状图方向
     private double progress;//设置进度  1为最大值
     private boolean isAnim = true; //是否动画显示统计条
+
     private Handler handler = new Handler();//动画handler
     private int animRate = 1; //动画速度   以每1毫秒计
     private int animTime = 0;//动画延迟执行时间
@@ -51,7 +55,6 @@ public class AutoProgressView extends View implements Runnable {
     public AutoProgressView(Context context) {
         super(context);
     }
-
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -147,7 +150,7 @@ public class AutoProgressView extends View implements Runnable {
     }
 
     /**
-     * drawViewWithBitmap:(绘制图片进度条). <br/>
+     * drawViewWithBitmap:(绘制图片进度条)
      *
      * @param paint
      * @param isAnim
@@ -176,6 +179,25 @@ public class AutoProgressView extends View implements Runnable {
                 dst = new RectF(0, comHeight - rateHeight, comWidth, comHeight);
                 canvas.drawBitmap(rataBackgroundBitmap, null, dst, paint);
             }
+        }
+    }
+
+    /**
+     * 刷新界面
+     *
+     * @see Runnable#run()
+     */
+    @Override
+    public void run() {
+        if (orientation == LinearLayout.HORIZONTAL && (rateAnimValue <= rateWidth)) {
+            rateAnimValue += animRate;
+            invalidate();
+        } else if (orientation == LinearLayout.VERTICAL && (rateAnimValue <= rateHeight)) {
+            rateAnimValue += animRate;
+            invalidate();
+        } else {
+            handler.removeCallbacks(this);
+            rateAnimValue = 0;
         }
     }
 
@@ -225,7 +247,6 @@ public class AutoProgressView extends View implements Runnable {
         this.orientation = orientation;
     }
 
-
     public boolean isAnim() {
         return isAnim;
     }
@@ -260,25 +281,6 @@ public class AutoProgressView extends View implements Runnable {
         this.rateBackgroundId = rateBackground;
         rataBackgroundBitmap = BitmapFactory.decodeResource(getResources(), rateBackgroundId);
         rateBackgroundColor = null;
-    }
-
-    /**
-     * 刷新界面
-     *
-     * @see Runnable#run()
-     */
-    @Override
-    public void run() {
-        if (orientation == LinearLayout.HORIZONTAL && (rateAnimValue <= rateWidth)) {
-            rateAnimValue += animRate;
-            invalidate();
-        } else if (orientation == LinearLayout.VERTICAL && (rateAnimValue <= rateHeight)) {
-            rateAnimValue += animRate;
-            invalidate();
-        } else {
-            handler.removeCallbacks(this);
-            rateAnimValue = 0;
-        }
     }
 
 }
